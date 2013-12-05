@@ -5,9 +5,9 @@ package com.donnfelker.android.bootstrap.events;
  * Subscription occurs in the {@link com.donnfelker.android.bootstrap.ui.MainActivity}
  */
 public class NavItemSelectedEvent {
-    private int itemPosition;
+    private final int itemPosition;
 
-    public NavItemSelectedEvent(int itemPosition) {
+    public NavItemSelectedEvent(final int itemPosition) {
         this.itemPosition = itemPosition;
     }
 

@@ -8,7 +8,6 @@ import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
 
-import butterknife.InjectView;
 import butterknife.Views;
 
 /**

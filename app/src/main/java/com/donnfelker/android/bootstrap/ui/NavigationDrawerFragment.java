@@ -1,6 +1,5 @@
 package com.donnfelker.android.bootstrap.ui;
 
-import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -222,10 +221,7 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     private boolean isTablet() {
-        if(getActivity() != null) {
-            return UIUtils.isTablet(getActivity());
-        }
-        return false;
+        return getActivity() != null && UIUtils.isTablet(getActivity());
     }
 
     @Override

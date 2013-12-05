@@ -30,7 +30,7 @@ import static android.view.View.VISIBLE;
 
 public class BootstrapTimerActivity extends BootstrapFragmentActivity implements View.OnClickListener {
 
-    @Inject Bus eventBus;
+    @Inject Bus eventBus; //FIXME has this not been injected in BootstrapFragmentActivity
 
     @InjectView(R.id.chronometer) protected TextView chronometer;
     @InjectView(R.id.start) protected Button start;

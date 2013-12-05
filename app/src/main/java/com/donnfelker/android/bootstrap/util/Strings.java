@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class Strings {
+public final class Strings {
     private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
 
     /**
@@ -70,19 +70,19 @@ public class Strings {
         return join(delimiter, Arrays.asList(objects));
     }
 
-    public static String toString(InputStream input) {
+    public static String toString(final InputStream input) {
         StringWriter sw = new StringWriter();
         copy(new InputStreamReader(input), sw);
         return sw.toString();
     }
 
-    public static String toString(Reader input) {
+    public static String toString(final Reader input) {
         StringWriter sw = new StringWriter();
         copy(input, sw);
         return sw.toString();
     }
 
-    public static int copy(Reader input, Writer output) {
+    public static int copy(final Reader input, final Writer output) {
         long count = copyLarge(input, output);
         return count > Integer.MAX_VALUE ? -1 : (int) count;
     }
@@ -106,12 +106,20 @@ public class Strings {
         return toString(o, "");
     }
 
-    public static String toString(final Object o, final String def) {
-        return o == null ? def :
-                o instanceof InputStream ? toString((InputStream) o) :
-                        o instanceof Reader ? toString((Reader) o) :
-                                o instanceof Object[] ? Strings.join(", ", (Object[]) o) :
-                                        o instanceof Collection ? Strings.join(", ", (Collection<?>) o) : o.toString();
+    public static String toString(final Object o, final String nullString) {
+        if (o == null) {
+            return nullString;
+        } else if(o instanceof InputStream) {
+            return toString((InputStream) o);
+        } else if(o instanceof Reader) {
+            return toString((Reader) o);
+        } else if (o instanceof Object[]) {
+            return Strings.join(", ", (Object[]) o);
+        } else if (o instanceof Collection) {
+            return Strings.join(", ", (Collection<?>) o);
+        } else {
+            return o.toString();
+        }
     }
 
     public static boolean isEmpty(final Object o) {
@@ -119,10 +127,10 @@ public class Strings {
     }
 
     public static boolean notEmpty(final Object o) {
-        return toString(o).trim().length() != 0;
+        return !isEmpty(o);
     }
 
-    public static String md5(String s) {
+    public static String md5(final String s) {
         // http://stackoverflow.com/questions/1057041/difference-between-java-and-php5-md5-hash
         // http://code.google.com/p/roboguice/issues/detail?id=89
         try {
@@ -148,21 +156,21 @@ public class Strings {
         }
     }
 
-    public static String capitalize(String s) {
+    public static String capitalize(final String s) {
         final String c = Strings.toString(s);
         return c.length() >= 2 ? c.substring(0, 1).toUpperCase() + c.substring(1) :
                 c.length() >= 1 ? c.toUpperCase() : c;
     }
 
-    public static boolean equals(Object a, Object b) {
+    public static boolean equals(final Object a, final Object b) {
         return Strings.toString(a).equals(Strings.toString(b));
     }
 
-    public static boolean equalsIgnoreCase(Object a, Object b) {
+    public static boolean equalsIgnoreCase(final Object a, final Object b) {
         return Strings.toString(a).toLowerCase().equals(Strings.toString(b).toLowerCase());
     }
 
-    public static String[] chunk(String str, int chunkSize) {
+    public static String[] chunk(final String str, final int chunkSize) {
         if (isEmpty(str) || chunkSize == 0)
             return new String[0];
 
@@ -176,22 +184,30 @@ public class Strings {
         return array;
     }
 
-    public static String namedFormat(String str, Map<String, String> substitutions) {
-        for (String key : substitutions.keySet())
-            str = str.replace('$' + key, substitutions.get(key));
+    public static String namedFormat(final String str, final Map<String, String> substitutions) {
+        String result = str;
+        for (Map.Entry<String, String> entry : substitutions.entrySet()) {
+            result = result.replace("$" + entry.getKey(), entry.getValue());
+        }
 
-        return str;
+        return result;
     }
 
-    public static String namedFormat(String str, Object... nameValuePairs) {
-        if (nameValuePairs.length % 2 != 0)
+    public static String namedFormat(final String str, final Object... nameValuePairs) {
+        if (nameValuePairs.length % 2 != 0) {
             throw new InvalidParameterException("You must include one value for each parameter");
+        }
 
         final HashMap<String, String> map = new HashMap<String, String>(nameValuePairs.length / 2);
-        for (int i = 0; i < nameValuePairs.length; i += 2)
+        for (int i = 0; i < nameValuePairs.length; i += 2) {
             map.put(Strings.toString(nameValuePairs[i]), Strings.toString(nameValuePairs[i + 1]));
+        }
 
         return namedFormat(str, map);
+    }
+
+    private Strings() {
+        //util class
     }
 
 }
